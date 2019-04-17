@@ -14,16 +14,16 @@ public class VegetableGO : MonoBehaviour
     public void OnTriggerEnter2D(Collider2D collision)
     {
     //On trigger 
-        if(string.Equals(collision.gameObject.tag, "Player"))
+        if(string.Equals(collision.gameObject.tag, "Player1"))
         {
-            var playerInventory = collision.gameObject.GetComponent<PlayerInventory>();
+            var playerInventory = GameController.Instance.GameModel.Player1Inventory;
             Debug.Log(gameObject.name);
             playerInventory.AddObjectToInventory(Veggie);
-            
-            //check if player inventory is full
-            //if player inventory is not full 
-            // create an object and add it into the inventory of the player
-
+        }else if (string.Equals(collision.gameObject.tag, "Player2"))
+        {
+            var playerInventory = GameController.Instance.GameModel.Player2Inventory;
+            Debug.Log(gameObject.name);
+            playerInventory.AddObjectToInventory(Veggie);
         }
     }
 }
