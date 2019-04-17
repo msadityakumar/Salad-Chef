@@ -32,6 +32,15 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
+    public Vegetable RemoveVeggieFromInventory()
+    {
+        if (m_InventoryQueue.Count == 0)
+            return null;
+
+        var veggie = m_InventoryQueue.Dequeue();
+        return veggie;
+    }
+
     public PlayerData GetPlayerData()
     {
         m_PlayerData.Veggie1 =  m_InventoryQueue.ElementAtOrDefault(0);
