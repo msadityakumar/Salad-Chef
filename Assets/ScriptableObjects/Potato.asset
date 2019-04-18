@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   VegetableName: Potato
   VegetableCode: 80
+  VeggieColor: {r: 0.6698113, g: 0.2086586, b: 0, a: 1}

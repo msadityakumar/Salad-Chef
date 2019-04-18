@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   VegetableName: Tomato
   VegetableCode: 84
+  VeggieColor: {r: 1, g: 0, b: 0, a: 1}

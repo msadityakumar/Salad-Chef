@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   VegetableName: Carrot
   VegetableCode: 67
+  VeggieColor: {r: 0.9716981, g: 0.60790235, b: 0.12375401, a: 1}

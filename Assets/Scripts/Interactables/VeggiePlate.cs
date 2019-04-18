@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VeggiePlate : MonoBehaviour, IInteractable<PlayerController>
+public class VeggiePlate : MonoBehaviour, IInteractable<InteractionType>
 {
     private bool m_IsInteracting;
     private PlayerController m_playerController;
@@ -15,19 +15,31 @@ public class VeggiePlate : MonoBehaviour, IInteractable<PlayerController>
         m_playerController = null;
     }
 
+    // collision triggers
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!IsInteracting())
-        {
-            var playerController = collision.gameObject.GetComponent<PlayerController>();
-            playerController.AssignInteractable(this);
-        }
+        AssignInteractable(collision);
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        AssignInteractable(collision);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (m_playerController)
             ExitInteractable();
+    }
+
+    public void AssignInteractable(Collider2D collision)
+    {
+        if (!IsInteracting() && !m_playerController)
+        {
+            var playerController = collision.gameObject.GetComponent<PlayerController>();
+            m_playerController = playerController;
+            playerController.AssignInteractable(this);
+        }
     }
 
     public bool CanStartInteraction()
@@ -41,46 +53,33 @@ public class VeggiePlate : MonoBehaviour, IInteractable<PlayerController>
     public void ExitInteractable()
     {
         m_IsInteracting = false;
-        m_playerController.RemoveInteractable();
-    }
-
-    public void Interact(PlayerController objectToInteract)
-    {
-        //started interaction
-        m_IsInteracting = true;
-        if (objectToInteract.GetType() == typeof(PlayerController))
-        {
-            m_playerController = objectToInteract;
-            if (m_VeggieHolder == null)
-            {
-                var veggie = m_playerController.PlayerInventory.RemoveVeggieFromInventory();
-                AssignVeggieToPlate(veggie);
-            }
-            else
-            {
-                m_playerController.PlayerInventory.AddObjectToInventory(m_VeggieHolder);
-                m_VeggieHolder = null;
-                Debug.Log("Plate Is empty");
-            }
-        }
-        else
-        {
-            Debug.LogError("Only player controller can interact with objects");
-        }
-    }
-
-    public void InteractionComplete()
-    {
-        m_IsInteracting = false;
-
-        if (!m_playerController)
+        if (m_playerController)
         {
             m_playerController.RemoveInteractable();
+            m_playerController = null;
         }
-        else
-        {
-            Debug.LogError("Only player controller can interact with objects");
-        }
+    }
+
+    public void CompleteInteraction()
+    {
+        m_IsInteracting = false;
+    }
+
+    public void Interact(InteractionType type)
+    {
+        //started interaction
+            if (m_VeggieHolder == null && type == InteractionType.PlaceDown)
+            {
+                m_IsInteracting = true;
+            var veggie = m_playerController.PlayerInventory.RemoveVeggieFromInventory();
+                AssignVeggieToPlate(veggie);
+            }
+            else if(m_VeggieHolder != null && type == InteractionType.Pickup)
+            {
+                m_IsInteracting = true;
+                m_playerController.PlayerInventory.AddObjectToInventory(m_VeggieHolder);
+                m_VeggieHolder = null;
+            }
     }
 
     public bool IsInteracting()

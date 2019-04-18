@@ -8,6 +8,7 @@ public class PlayerData
     public Vegetable Veggie1;
     public Vegetable Veggie2;
     public Salad Salad;
+
 }
 
 public class PlayerInventory : MonoBehaviour
@@ -21,6 +22,8 @@ public class PlayerInventory : MonoBehaviour
     {
         m_InventoryQueue = new Queue<Vegetable>();
         m_PlayerData = new PlayerData();
+        m_PlayerData.Salad = new Salad();
+
     }
 
     public void AddObjectToInventory(Vegetable obj)
@@ -61,10 +64,13 @@ public class PlayerInventory : MonoBehaviour
         return m_InventoryQueue.Count;
     }
 
-    public void Update()
+    public void AddVeggiesToSalad(Vegetable veggie)
     {
-        //continously update the current inventory on the display
-         
-        
+        m_PlayerData.Salad.AddVeggieToSalad(veggie);
+    }
+
+    public void PurgeSalad()
+    {
+        m_PlayerData.Salad.ScrapSalad();
     }
 }

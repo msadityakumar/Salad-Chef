@@ -3,9 +3,9 @@ public interface IInteractable<T>
 {
     bool IsInteracting();
     bool CanStartInteraction();
-    void InteractionComplete();
-    void Interact(T objectToInteract);
+    void Interact(T InteractionType);
     void ReadyForInteraction();
 
     void ExitInteractable();
+    void CompleteInteraction();
 }

@@ -37,7 +37,27 @@ public class PlayerInventoryDisplay : MonoBehaviour
         {
             PlayerSlot2Text.text = playerData.Veggie2.VegetableName;
         }
-        
-        
+
+        if (playerData.Salad == null)
+        {
+            CombinationText.text = "Salad: Empty";
+        }
+        else
+        {
+            CombinationText.text = GetTextFromQueue(playerData.Salad);
+        }
+    }
+
+    string GetTextFromQueue(Salad salad)
+    {
+        string saladStr = "Salad: ";
+        int i = 0;
+        while (i < salad.GetSize())
+        {
+            var veggie = salad.GetElementAt(i);
+            saladStr += veggie.VegetableCode.ToString()+ " ";
+            i++;
+        }
+        return saladStr;
     }
 }

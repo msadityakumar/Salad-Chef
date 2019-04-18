@@ -2,10 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum InteractionType
+{
+    Pickup,
+    PlaceDown
+}
+
 public class PlayerController : MonoBehaviour
 {
     public float Speed = 5f;
-    private IInteractable<PlayerController> m_Interactable;
+    private IInteractable<InteractionType> m_Interactable;
+    protected bool m_FreezePlayer = false;
 
     [SerializeField] private string InputHorizontalAxis;
     [SerializeField] private string InputVerticalAxis;
@@ -18,21 +25,24 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+   protected void BaseUpdate()
     {
+
+
         float xAxis = Input.GetAxis(InputHorizontalAxis);
         float yAxis = Input.GetAxis(InputVerticalAxis);
 
         Vector3 movement = new Vector3(xAxis * Time.deltaTime * Speed, yAxis * Time.deltaTime * Speed, 0f);
         this.gameObject.transform.Translate(movement);
 
-        if (Input.GetKeyDown(KeyCode.Q))
+    }
+
+    public void InteractWithObject(InteractionType type)
+    {
+        if (m_Interactable != null && m_Interactable.CanStartInteraction())
         {
-            if (m_Interactable != null && m_Interactable.CanStartInteraction())
-            {
-                m_Interactable.Interact(this);
-                m_Interactable.InteractionComplete();
-            }
+            m_Interactable.Interact(type);
+            m_Interactable.CompleteInteraction();
         }
     }
 
@@ -41,14 +51,15 @@ public class PlayerController : MonoBehaviour
         m_Interactable = null;
     }
 
-    public IInteractable<PlayerController> GetCurrentInteractable()
+    public void AssignInteractable(IInteractable<InteractionType> interactable)
     {
-        return m_Interactable;
+        if (m_Interactable != null)
+            m_Interactable = null;
+        m_Interactable = interactable;
     }
 
-    public void AssignInteractable(IInteractable<PlayerController> interactable)
+    public void FreezePlayer(bool status)
     {
-        if(m_Interactable == null)
-        m_Interactable = interactable;
+        m_FreezePlayer = status;
     }
 }
