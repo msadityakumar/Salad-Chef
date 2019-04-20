@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum InteractionType
 {
@@ -10,25 +8,16 @@ public enum InteractionType
 
 public class PlayerController : MonoBehaviour
 {
+    public PlayerInventory PlayerInventory;
     public float Speed = 5f;
     private IInteractable<InteractionType> m_Interactable;
-    protected bool m_FreezePlayer = false;
 
     [SerializeField] private string InputHorizontalAxis;
     [SerializeField] private string InputVerticalAxis;
+    protected bool m_FreezePlayer = false;
 
-    public PlayerInventory PlayerInventory;
-    // Start is called before the first frame update
-    void Start()
+    protected void BaseUpdate()
     {
-        
-    }
-
-    // Update is called once per frame
-   protected void BaseUpdate()
-    {
-
-
         float xAxis = Input.GetAxis(InputHorizontalAxis);
         float yAxis = Input.GetAxis(InputVerticalAxis);
 
@@ -44,6 +33,11 @@ public class PlayerController : MonoBehaviour
             m_Interactable.Interact(type);
             m_Interactable.CompleteInteraction();
         }
+    }
+
+    public IInteractable<InteractionType> GetInteractable()
+    {
+        return m_Interactable;
     }
 
     public void RemoveInteractable()

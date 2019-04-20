@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class ProgressBar : MonoBehaviour
 {
     public RectTransform BarRectTransform;
     float m_BarDisplay; //current progress
+    private Customer m_Customer;
+
+    void Start()
+    {
+        m_Customer = GetComponent<Customer>();
+    }
 
     void Update()
     {
-        var customer = this.GetComponent<Customer>();
-        BarRectTransform.localScale = new Vector3(customer.GetProgress(), BarRectTransform.localScale.y, BarRectTransform.localScale.z); 
+        BarRectTransform.localScale = new Vector3(m_Customer.GetProgress(), BarRectTransform.localScale.y, BarRectTransform.localScale.z); 
     }
 }

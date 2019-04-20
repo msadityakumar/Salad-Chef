@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerInventoryDisplay : MonoBehaviour
@@ -9,11 +7,8 @@ public class PlayerInventoryDisplay : MonoBehaviour
     public Text PlayerSlot1Text;
     public Text PlayerSlot2Text;
     public Text CombinationText;
-
-    void Start()
-    {
-        
-    }
+    public Text PlayerTime;
+    public Text PlayerScore;
 
     void Update()
     {
@@ -45,6 +40,24 @@ public class PlayerInventoryDisplay : MonoBehaviour
         else
         {
             CombinationText.text = GetTextFromQueue(playerData.Salad);
+        }
+
+        if (playerData.PlayerRemainingTime == null)
+        {
+            PlayerTime.text = "Time: 00:00";
+        }
+        else
+        {
+            PlayerTime.text = "Timer: " + playerData.PlayerRemainingTime.ToString("0");
+        }
+
+        if (playerData.PlayerScore == null)
+        {
+            PlayerScore.text = "Score: 00";
+        }
+        else
+        {
+            PlayerScore.text = "Score: " + playerData.PlayerScore.ToString();
         }
     }
 

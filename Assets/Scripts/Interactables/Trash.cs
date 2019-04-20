@@ -1,14 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Trash : MonoBehaviour, IInteractable<InteractionType>
 {
     private bool m_IsInteracting;
     private PlayerController m_playerController;
+    private SpriteRenderer m_SpriteRenderer;
 
     void Start()
     {
+        m_SpriteRenderer = GetComponent<SpriteRenderer>();
         m_IsInteracting = false;
     }
 
@@ -35,6 +35,12 @@ public class Trash : MonoBehaviour, IInteractable<InteractionType>
             var playerController = collision.gameObject.GetComponent<PlayerController>();
             m_playerController = playerController;
             playerController.AssignInteractable(this);
+        }
+
+        if (m_playerController)
+        {
+            if(m_playerController.GetInteractable() == null)
+                m_playerController.AssignInteractable(this);
         }
     }
 
@@ -81,6 +87,20 @@ public class Trash : MonoBehaviour, IInteractable<InteractionType>
         {
             m_IsInteracting = true;
             m_playerController.PlayerInventory.PurgeSalad();
+        }
+    }
+
+    void Update()
+    {
+        if (m_playerController)
+        {
+            var color = m_SpriteRenderer.color;
+            m_SpriteRenderer.color = new Color(color.r, color.g, color.b, 0.5f);
+        }
+        else
+        {
+            var color = m_SpriteRenderer.color;
+            m_SpriteRenderer.color = new Color(color.r, color.g, color.b, 1f);
         }
     }
 }

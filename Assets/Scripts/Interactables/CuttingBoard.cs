@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 public class CuttingBoard : MonoBehaviour, IInteractable<InteractionType>
@@ -9,15 +7,14 @@ public class CuttingBoard : MonoBehaviour, IInteractable<InteractionType>
     private bool m_IsInteracting;
     private PlayerController m_playerController;
     private Salad m_CuttingBoardSalad;
+    private bool m_FreezeCuttingBoard;
+    private SpriteRenderer m_SpriteRenderer;
 
     void Start()
     {
+        m_SpriteRenderer = GetComponent<SpriteRenderer>();
+        m_FreezeCuttingBoard = false;
         m_CuttingBoardSalad = new Salad();
-    }
-
-    void Update()
-    {
-
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -27,7 +24,7 @@ public class CuttingBoard : MonoBehaviour, IInteractable<InteractionType>
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        AssignInteractable(collision);
+        //AssignInteractable(collision);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -48,7 +45,7 @@ public class CuttingBoard : MonoBehaviour, IInteractable<InteractionType>
 
     public bool CanStartInteraction()
     {
-        if (m_IsInteracting)
+        if (m_IsInteracting && m_FreezeCuttingBoard)
             return false;
 
         return true;
@@ -65,17 +62,7 @@ public class CuttingBoard : MonoBehaviour, IInteractable<InteractionType>
     }
 
     public void Interact(InteractionType type)
-    {
-        ///get veggie fron player
-        /// if veggie is empty do nothing
-        /// two interactable things
-        /// 1) add to salad
-        /// 2) take salad from board
-        /// empty the salad
-        /// while chopping freeze player and choppin board
-        /// So many things :/
-
-       
+    {    
         if (type == InteractionType.PlaceDown)
         {
             m_IsInteracting = true;
@@ -83,6 +70,7 @@ public class CuttingBoard : MonoBehaviour, IInteractable<InteractionType>
 
             if (veggie != null)
             {
+                m_FreezeCuttingBoard = true;
                 m_playerController.FreezePlayer(true);
                 StartCoroutine(AddVeggieToSalad(veggie));
             }
@@ -124,5 +112,20 @@ public class CuttingBoard : MonoBehaviour, IInteractable<InteractionType>
 
         m_CuttingBoardSalad.AddVeggieToSalad(veggie);
         m_playerController.FreezePlayer(false);
+        m_FreezeCuttingBoard = false;
+    }
+
+    void Update()
+    {
+        if (m_playerController)
+        {
+            var color = m_SpriteRenderer.color;
+            m_SpriteRenderer.color = new Color(color.r, color.g, color.b, 0.5f);
+        }
+        else
+        {
+            var color = m_SpriteRenderer.color;
+            m_SpriteRenderer.color = new Color(color.r, color.g, color.b, 1f);
+        }
     }
 }

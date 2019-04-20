@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class VegetableGO : MonoBehaviour, IInteractable<InteractionType>
 {
@@ -9,9 +6,11 @@ public class VegetableGO : MonoBehaviour, IInteractable<InteractionType>
     public TextMesh VeggieText;
     private bool m_IsInteracting;
     private PlayerController m_playerController;
+    private SpriteRenderer m_SpriteRenderer;
     void Start()
     {
         m_IsInteracting = false;
+        m_SpriteRenderer = this.GetComponent<SpriteRenderer>();
         var veggieSpriteRenderer = GetComponent<SpriteRenderer>();
         veggieSpriteRenderer.color = Veggie.VeggieColor;
         VeggieText.text = Veggie.VegetableCode.ToString();
@@ -25,13 +24,13 @@ public class VegetableGO : MonoBehaviour, IInteractable<InteractionType>
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if(m_playerController)
+        if (m_playerController)
             ExitInteractable();
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        AssignInteractable(collision);
+       // AssignInteractable(collision);
     }
 
     public void AssignInteractable(Collider2D collision)
@@ -60,11 +59,15 @@ public class VegetableGO : MonoBehaviour, IInteractable<InteractionType>
     public void ExitInteractable()
     {
         m_IsInteracting = false;
-        if (m_playerController)
+        if (m_playerController != null && m_playerController.GetInteractable() != null)
         {
-            m_playerController.RemoveInteractable();
-            m_playerController = null;
+            if (m_playerController.GetInteractable().Equals(this.gameObject))
+            {
+                m_playerController.RemoveInteractable();
+            }
+
         }
+        m_playerController = null;
     }
 
     public void CompleteInteraction()
@@ -87,6 +90,20 @@ public class VegetableGO : MonoBehaviour, IInteractable<InteractionType>
         {
             m_IsInteracting = true;
             m_playerController.PlayerInventory.AddObjectToInventory(Veggie);
+        }
+    }
+
+    void Update()
+    {
+        if (m_playerController)
+        {
+            var color = m_SpriteRenderer.color;
+            m_SpriteRenderer.color = new Color(color.r, color.g, color.b, 0.5f);
+        }
+        else
+        {
+            var color = m_SpriteRenderer.color;
+            m_SpriteRenderer.color = new Color(color.r, color.g, color.b, 1f);
         }
     }
 }

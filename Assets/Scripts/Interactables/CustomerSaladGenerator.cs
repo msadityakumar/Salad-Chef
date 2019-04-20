@@ -1,16 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CustomerSaladGenerator : MonoBehaviour
 {
     [SerializeField] private int m_MinVeggies;
     [SerializeField] private int m_MaxVeggies;
-
     [SerializeField] private Vegetable[] m_Vegetables;
-
     private Salad m_CustomerSalad;
-    // Start is called before the first frame update
+
     void Awake()
     {
         m_CustomerSalad = new Salad();

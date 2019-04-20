@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
     public static GameController Instance { get; private set; }
-
     public GameModel GameModel;
+    public UIManager UiManager;
+    private int m_PlayerFinishedCount = 0;
 
     void OnEnable()
     {
@@ -19,9 +18,10 @@ public class GameController : MonoBehaviour
             Instance = null;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void RegisterGameOver()
     {
-        
+        m_PlayerFinishedCount++;
+        if(m_PlayerFinishedCount >= 2)
+        UiManager.ShowGameOverScreen();
     }
 }
